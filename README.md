@@ -1,9 +1,6 @@
 # Simulador Industrial em Python com Streamlit
 
-**Simulação e visualização de indicadores industriais**
----
-
-### Descrição
+## Descrição
 
 Este projeto gera e visualiza **dados sintéticos de uma indústria fictícia**, cobrindo o fluxo completo do **Planejamento e Controle da Produção (PCP)** — desde **vendas e compras** até **produção, paradas e estoque**.
 
@@ -28,7 +25,7 @@ Cada indicador será exibido em uma **página independente** dentro do aplicativ
 
 ### Estrutura do projeto
 
-```
+``` typescript
 simulador_industrial/
 │
 ├── files/                     # Dados CSV simulados
@@ -63,7 +60,7 @@ pip install -r requirements.txt
 
 **`requirements.txt` sugerido:**
 
-```
+``` typescript
 pandas
 numpy
 streamlit

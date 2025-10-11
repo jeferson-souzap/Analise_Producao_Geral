@@ -4,8 +4,6 @@ from datetime import datetime, timedelta
 import random
 import os
 
-
-
 # CONFIGURAÇÕES GERAIS E VARIÁVEIS GLOBAIS
 
 np.random.seed(42)
@@ -78,6 +76,7 @@ def gerar_vendas():
     df = pd.DataFrame(registros, columns=[
         'Data', 'Produto', 'Cliente', 'Quantidade_vendida', 'Preco_unitario', 'Valor_total'
     ])
+    
     return df
 
 
@@ -120,8 +119,6 @@ def gerar_paradas():
                     duracao = round(np.random.uniform(0.5, 3), 2)
                     registros.append([data, mc, random.choice(motivos), duracao])
     return pd.DataFrame(registros, columns=['Data', 'Maquina', 'Motivo', 'Horas_paradas'])
-
-
 
 # ===============================================
 # SALDO DE ESTOQUE
