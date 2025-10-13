@@ -21,11 +21,12 @@ ARQ_PARADAS = os.path.join(FILES_DIR, "dados_paradas.csv")
 ARQ_ESTOQUE = os.path.join(FILES_DIR, "dados_estoque.csv")
 
 # Dados básicos
-PRODUTOS = ['A', 'B', 'C', 'D', 'E']
-MATERIAIS = ['AÇO', 'PLÁSTICO', 'ALUMÍNIO', 'BORRACHA', 'VIDRO']
+ano_inicio = 2022
+PRODUTOS = ['Caneta Azul', 'Caneta Preta', 'Caneta Vermelha', 'Caneta Verde', 'Caneta Amarela']
+MATERIAIS = ['Tinha', 'Tampas', 'Adesivo', 'Caixa', 'Etiqueta']
 MAQUINAS = [f'MC-{i}' for i in range(1, 8)]
-DATA_INICIO = datetime(2024, 1, 1)
-DIAS = 367
+DATA_INICIO = datetime(ano_inicio, 1, 1)
+DIAS = 365*3
 DATAS = [DATA_INICIO + timedelta(days=i) for i in range(DIAS)]
 
 # Lista de clientes (com pesos para criar clientes “grandes” e “pequenos”)
@@ -46,7 +47,7 @@ def gerar_vendas():
     registros = []
     for data in DATAS:
         for produto in PRODUTOS:
-            demanda_base = {'A': 100, 'B': 80, 'C': 60, 'D': 50, 'E': 40}[produto]
+            demanda_base = {'Caneta Azul': 100, 'Caneta Preta': 80, 'Caneta Vermelha': 60, 'Caneta Verde': 50, 'Caneta Amarela': 40}[produto]
             sazonal = np.sin((data.timetuple().tm_yday / 365) * 2 * np.pi) * 0.2
             vendas = max(int(np.random.normal(demanda_base * (1 + sazonal), 10)), 0)
             
@@ -62,7 +63,7 @@ def gerar_vendas():
                 qtd_restante -= qtd_cli
 
                 # Preço unitário variável por produto
-                preco_base = {'A': 25, 'B': 30, 'C': 20, 'D': 18, 'E': 15}[produto]
+                preco_base = {'Caneta Azul': 4.5, 'Caneta Preta': 3, 'Caneta Vermelha': 3.4, 'Caneta Verde': 2.8, 'Caneta Amarela': 1.5}[produto]
                 preco_unit = round(np.random.uniform(preco_base * 0.9, preco_base * 1.1), 2)
                 valor_total = round(qtd_cli * preco_unit, 2)
 
@@ -87,7 +88,7 @@ def gerar_compras():
     for data in DATAS:
         for material in MATERIAIS:
             qtd = max(int(np.random.normal(500,80)), 0)
-            custo_unit = {'AÇO': 12, 'PLÁSTICO': 8, 'ALUMÍNIO': 15, 'BORRACHA': 6, 'VIDRO': 10}[material]
+            custo_unit = {'Tinha': 12, 'Tampas': 8, 'Adesivo': 15, 'Caixa': 6, 'Etiqueta': 10}[material]
             registros.append([data, material, qtd, custo_unit, qtd * custo_unit])
     return pd.DataFrame(registros, columns=['Data', 'Material', 'Quantidade', 'Custo_unitário', 'Custo_total'])
 
@@ -126,8 +127,8 @@ def gerar_estoque(vendas_df, producao_df):
     registros = []
     
     # Valor base médio por produto (simulado)
-    preco_base = {'A': 25, 'B': 30, 'C': 20, 'D': 18, 'E': 15}
-    
+    preco_base = {'Caneta Azul': 25, 'Caneta Preta': 30, 'Caneta Vermelha': 20, 'Caneta Verde': 18, 'Caneta Amarela': 15}
+    #PRODUTOS = ['Caneta Azul', 'Caneta Preta', 'Caneta Vermelha', 'Caneta Verde', 'Caneta Amarela']
     # Saldo inicial aleatório por produto
     saldo = {p: random.randint(200, 400) for p in PRODUTOS}
     
