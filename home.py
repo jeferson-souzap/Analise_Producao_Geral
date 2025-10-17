@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-
 from IPython.core.pylabtools import figsize
 
+#Carregando procedimento que carrega os dados do CSV
 from utils.config_home import Carregar_vendas
 
 
@@ -45,7 +45,7 @@ with st.sidebar:
     anos_disponiveis = sorted(df_vendas['Data'].dt.year.unique(), reverse=True)
     ano_venda = st.selectbox('Escolha o ano:', anos_disponiveis)
 
-    meses_disponiveis = sorted(df_vendas['Data'].dt.month.unique(), reverse=True)
+    meses_disponiveis = sorted(df_vendas['Data'].dt.month.unique(), reverse=False)
     mes_venda = st.selectbox('Escolha o ano:', meses_disponiveis)
 
     #barra fica ruim de filtrar

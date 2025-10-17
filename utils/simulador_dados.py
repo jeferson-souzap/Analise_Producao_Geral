@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import random
 import os
 
@@ -21,12 +21,20 @@ ARQ_PARADAS = os.path.join(FILES_DIR, "dados_paradas.csv")
 ARQ_ESTOQUE = os.path.join(FILES_DIR, "dados_estoque.csv")
 
 # Dados básicos
-ano_inicio = 2022
+
+
+
 PRODUTOS = ['Caneta Azul', 'Caneta Preta', 'Caneta Vermelha', 'Caneta Verde', 'Caneta Amarela']
 MATERIAIS = ['Tinha', 'Tampas', 'Adesivo', 'Caixa', 'Etiqueta']
 MAQUINAS = [f'MC-{i}' for i in range(1, 8)]
-DATA_INICIO = datetime(ano_inicio, 1, 1)
+
+ANO_INICIO = 2022
+DATA_INICIO = datetime(ANO_INICIO, 1, 1)
+#DATA_HOJE = datetime.now()
+#DATA_INICIO_datetime = datetime(DATA_INICIO.year, DATA_INICIO.month, DATA_INICIO.day)
+#DIF_DATA = DATA_HOJE - DATA_INICIO
 DIAS = 365*3
+
 DATAS = [DATA_INICIO + timedelta(days=i) for i in range(DIAS)]
 
 # Lista de clientes (com pesos para criar clientes “grandes” e “pequenos”)
