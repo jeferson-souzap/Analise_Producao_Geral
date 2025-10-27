@@ -6,18 +6,12 @@ from IPython.core.pylabtools import figsize
 
 #Carregando procedimento que carrega os dados do CSV
 from utils.config_home import Carregar_vendas
-
+from utils.Config_geral import formatar_brl
 
 #Configuração de Pagina
 #-----------------------------------------------------------
 st.set_page_config('Ferramenta de Analise de produção', layout='wide')
 #-----------------------------------------------------------
-
-#FUNÇÕES
-def formatar_brl(valor):
-    #Formata um valor numérico (R$)
-    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-
 
 #Carregamento dos dados
 #-----------------------------------------------------------

@@ -7,6 +7,13 @@ from utils.simulador_dados import ARQ_PRODUCAO, ARQ_VENDAS, ARQ_COMPRAS, ARQ_PAR
 #Configuração da página
 st.set_page_config('Dados Simulados', layout='wide')
 
+st.markdown('## Configuração de simulação de dados')
+
+DIAS = st.number_input('Informe a quantidade de dias para simulação:', min_value=30)
+LOCAL_FILES = st.text_input('Informe onde deseja salvar os arquivos', placeholder='D:/local')
+st.button('Gerar arquivos')
+
+st.divider()
 
 with st.expander('Dados de Venda', expanded=False):
     st.markdown('### Simulação de venda')

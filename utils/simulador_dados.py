@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 import random
 import os
 
@@ -21,9 +21,6 @@ ARQ_PARADAS = os.path.join(FILES_DIR, "dados_paradas.csv")
 ARQ_ESTOQUE = os.path.join(FILES_DIR, "dados_estoque.csv")
 
 # Dados básicos
-
-
-
 PRODUTOS = ['Caneta Azul', 'Caneta Preta', 'Caneta Vermelha', 'Caneta Verde', 'Caneta Amarela']
 MATERIAIS = ['Tinha', 'Tampas', 'Adesivo', 'Caixa', 'Etiqueta']
 MAQUINAS = [f'MC-{i}' for i in range(1, 8)]

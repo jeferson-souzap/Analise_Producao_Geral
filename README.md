@@ -129,5 +129,6 @@ Analista de PCP | Python | Data Analytics | SQL
 Conectando operação industrial à análise de dados
 
 Estudante de Física e Analista de PCP explorando o uso de Python e C++ em análise de dados, simulações científicas e otimização de processos industriais.
+
 Este repositório reúne meus estudos e projetos voltados à ciência de dados aplicada à indústria, automação e visualização de indicadores de produção.
 Sempre buscando unir teoria, prática e tecnologia para resolver problemas reais.
