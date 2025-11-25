@@ -100,11 +100,12 @@ with tab01:
     }
 
     # Layout de gráficos
-    col_left, col_right = st.columns([2, 1])
+    col_left, col_right = st.columns([2, 2])
 
+    # Receita Mensal  - Grafico atualizado para dados "REAIS"
     with col_left:
-        # Grafico atualizado para dados "REAIS"
-        st.markdown("#### Receita Mensal")
+
+        st.markdown(f"#### Receita Mensal ano {ano_venda}")
 
         df_filtrado_receita = df_vendas[df_vendas['Data'].dt.year == ano_venda]
         meses_portugues = {
@@ -115,6 +116,7 @@ with tab01:
         df_filtrado_receita['Mes_abreviado'] = df_filtrado_receita['Data'].dt.month.map(meses_portugues)
         df_receita_mensal = df_filtrado_receita.groupby('Mes_abreviado')['Valor_total'].sum().reset_index()
 
+        #testando a biblioteca go / grafico mais bonitinho
         fig_receita = go.Figure()
         fig_receita.add_trace(go.Scatter(
             x=df_receita_mensal['Mes_abreviado'],
@@ -126,6 +128,7 @@ with tab01:
 
         ))
 
+        #estudar melhor cada argumento do grafico
         fig_receita.update_layout(
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
@@ -140,17 +143,20 @@ with tab01:
 
     with col_right:
         # Top Clientes por Receita
-        st.markdown("#### Top Clientes por Receita")
+        st.markdown(f"#### Top Produtos ano {ano_venda}")
+
+        df_top_produtos =  df_filtrado.groupby('Produto')['Valor_total'].sum().reset_index()
+        df_top_produtos = df_top_produtos.sort_values('Valor_total', ascending=True)
 
         df_top_clientes = pd.DataFrame(top_clientes)
 
         fig_top_clientes = go.Figure()
         fig_top_clientes.add_trace(go.Bar(
-            y=df_top_clientes['Produto'],
-            x=df_top_clientes['Receita'],
+            y=df_top_produtos['Produto'],
+            x=df_top_produtos['Valor_total'],
             orientation='h',
             marker=dict(color='rgb(20, 184, 166)'),
-            text=[f'R$ {v:,.0f}' for v in df_top_clientes['Receita']],
+            text=[f'R$ {v:,.0f}' for v in df_top_produtos['Valor_total']],
             textposition='outside',
             textfont=dict(size=10)
         ))
@@ -220,3 +226,26 @@ with tab01:
         )
 
         st.plotly_chart(fig_donut, use_container_width=True)
+
+
+
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------
+with tab02:
+    with st.container(border=True):
+        col_tab01, col_tab02 = st.columns(2)
+        with col_tab01:
+            mes_previsao = st.number_input('Mes de previsão')
+            ano_previsao = st.number_input('Ano de previsão')
+
+        with col_tab02:
+            periodo_meses = st.number_input('Periodo Meses')
+            periodo_anos = st.number_input('Periodo Anos')
+
+        st.button('Gerar')
+
+
+
+    with st.container(border=True):
+        pass
