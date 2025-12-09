@@ -13,10 +13,8 @@ from utils.Config_geral import formatar_brl
 
 #CONFIGURAÇÃO DA PAGINA
 st.set_page_config('Indicadores de Vendas', layout="wide", initial_sidebar_state="collapsed")
-#st.sidebar.page_link('pages/Simulador_Vendas.py', label='Simulador Vendas')
 
 #FUNÇÕES
-
 
 #VARIAVEIS GOBLAIS
 df_vendas = Carregar_vendas()
@@ -25,10 +23,12 @@ df_vendas = Carregar_vendas()
 
 
 # Configuração de janelas
-tab01, tab02 = st.tabs([
+tab01, tab02, tab03 = st.tabs([
     "Indicadores Venda",
-    "Forecast - IA"
+    "Forecast - IA",
+    "S&OP"
 ])
+
 
 with tab01:
     # Header com filtros
@@ -38,20 +38,16 @@ with tab01:
         st.markdown("## Análise Geral de Vendas")
 
     with col_mes:
-        #Material para teste do selectbox
-        #mes = st.selectbox("Mês", ["Todos", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"], label_visibility="collapsed")
         anos_disponiveis = sorted(df_vendas['Data'].dt.year.unique(), reverse=True)
         ano_venda = st.selectbox('Escolha o ano:', anos_disponiveis, label_visibility="collapsed")
 
     with col_ano:
-        #ano = st.selectbox("Ano", ["2024", "2023", "2022"], label_visibility="collapsed")
         meses_disponiveis = sorted(df_vendas['Data'].dt.month.unique(), reverse=False)
         mes_venda = st.selectbox('Escolha o ano:', meses_disponiveis, label_visibility="collapsed")
     st.markdown("---")
 
     with st.container(border=True):
         df_filtrado = df_vendas[(df_vendas['Data'].dt.year == ano_venda) & (df_vendas['Data'].dt.month == mes_venda)]
-
 
         colm01, colm02, colm03 = st.columns(3, vertical_alignment="center")
         with colm01:
@@ -76,34 +72,8 @@ with tab01:
     st.markdown("<br>", unsafe_allow_html=True)
 
 
-
-    # Dados de exemplo para os gráficos
-    # Receita Mensal
-    meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
-    receita_mensal = [45000000, 38000000, 42000000, 48000000, 43000000, 50000000,
-                      52000000, 55000000, 58000000, 60000000, 63000000, 65000000]
-
-    # Top 5 Clientes
-    clientes_top5 = {
-        'Cliente': ['Cliente 2', 'Cliente 13', 'Cliente 4', 'Cliente 14', 'Cliente 16'],
-        'Receita': [16883354, 15456514, 14627368, 14095247, 13980792]
-    }
-
-    # Percentual por Categoria
-    categorias = ['Acessórios', 'Periféricos', 'Mobile', 'Informática']
-    percentuais = [39.94, 9.22, 26.1, 24.74]
-
-    # Top Clientes por Receita
-    top_clientes = {
-        'Produto': ['Teclado', 'Notebook', 'Tablet', 'Headset', 'Mouse', 'Celular', 'Monitor', 'Impressora'],
-        'Receita': [13009323, 12030996, 11794829, 11066709, 8312167, 8218292, 6413774, 6252610]
-    }
-
-    # Layout de gráficos
-    col_left, col_right = st.columns([2, 2])
-
     # Receita Mensal  - Grafico atualizado para dados "REAIS"
-    with col_left:
+    with st.container():
 
         st.markdown(f"#### Receita Mensal ano {ano_venda}")
 
@@ -123,8 +93,8 @@ with tab01:
             y=df_receita_mensal['Valor_total'],
             fill='tozeroy',
             fillcolor='rgba(45, 212, 191, 0.3)',
-            line=dict(color='rgb(20, 184, 166)', width=2),
-            mode='lines'
+            line=dict(color='rgb(20, 184, 166)', width=2)
+            # mode='lines'
 
         ))
 
@@ -141,14 +111,48 @@ with tab01:
 
         st.plotly_chart(fig_receita, use_container_width=True)
 
+
+#------------------------------------------------------------------------------
+
+
+    col_left, col_right = st.columns([2, 2])
+
+    # Top 5 Clientes por Receita com dados "REAIS"
+    with col_left:
+        st.markdown(f"#### Top 5 Clientes por valor {ano_venda}")
+
+
+        df_top5_clientes = df_vendas.groupby('Cliente')['Valor_total'].sum().reset_index()
+        df_top5_clientes = df_top5_clientes.sort_values('Valor_total', ascending=False)
+
+        fig_clientes = go.Figure()
+        fig_clientes.add_trace(go.Bar(
+            x=df_top5_clientes['Cliente'],
+            y=df_top5_clientes['Valor_total'],
+            marker=dict(color='rgb(20, 184, 166)'),
+            text=[f'R$ {v:,.0f}' for v in df_top5_clientes['Valor_total']],
+            textposition='outside',
+            textfont=dict(size=10)
+        ))
+
+        fig_clientes.update_layout(
+            height=350,
+            margin=dict(l=20, r=20, t=20, b=20),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False, showticklabels=False),
+            showlegend=False
+        )
+
+        st.plotly_chart(fig_clientes, use_container_width=True)
+
+    # Top Clientes por Receita - Gráfico atualizado para dados "REAIS"
     with col_right:
-        # Top Clientes por Receita
         st.markdown(f"#### Top Produtos ano {ano_venda}")
 
-        df_top_produtos =  df_filtrado.groupby('Produto')['Valor_total'].sum().reset_index()
+        df_top_produtos = df_filtrado.groupby('Produto')['Valor_total'].sum().reset_index()
         df_top_produtos = df_top_produtos.sort_values('Valor_total', ascending=True)
-
-        df_top_clientes = pd.DataFrame(top_clientes)
 
         fig_top_clientes = go.Figure()
         fig_top_clientes.add_trace(go.Bar(
@@ -173,26 +177,26 @@ with tab01:
 
         st.plotly_chart(fig_top_clientes, use_container_width=True)
 
-    # Segunda linha de gráficos
-    col_left2, col_right2 = st.columns([1, 1])
+    # Grafico Faturamento mensal
+    #Será que da para colocar linha de tendência?
+    with st.container():
+        st.subheader(f"Vendas por dia do mês 0{mes_venda}")
 
-    with col_left2:
-        # Top 5 Clientes por Receita
-        st.markdown("#### Top 5 Clientes por Receita")
+        df_vendas_mes = df_filtrado.groupby('Data')['Valor_total'].sum().reset_index()
 
-        df_clientes = pd.DataFrame(clientes_top5)
+        #st.dataframe(df_vendas_mes)
 
-        fig_clientes = go.Figure()
-        fig_clientes.add_trace(go.Bar(
-            x=df_clientes['Cliente'],
-            y=df_clientes['Receita'],
+        fig_vendas_mes = go.Figure()
+        fig_vendas_mes.add_trace(go.Bar(
+            x=df_vendas_mes['Data'],
+            y=df_vendas_mes['Valor_total'],
             marker=dict(color='rgb(20, 184, 166)'),
-            text=[f'R$ {v:,.0f}' for v in df_clientes['Receita']],
+            text=[f'R$ {v:,.0f}' for v in df_vendas_mes['Valor_total']],
             textposition='outside',
             textfont=dict(size=10)
         ))
 
-        fig_clientes.update_layout(
+        fig_vendas_mes.update_layout(
             height=300,
             margin=dict(l=20, r=20, t=20, b=20),
             paper_bgcolor='rgba(0,0,0,0)',
@@ -202,37 +206,20 @@ with tab01:
             showlegend=False
         )
 
-        st.plotly_chart(fig_clientes, use_container_width=True)
-
-    with col_right2:
-        # Gráfico de Rosca - Percentual por Categoria
-        st.markdown("#### Percentual de Vendas por Categoria")
-
-        fig_donut = go.Figure(data=[go.Pie(
-            labels=categorias,
-            values=percentuais,
-            hole=0.5,
-            marker=dict(colors=['#14b8a6', '#2dd4bf', '#5eead4', '#99f6e4']),
-            textinfo='label+percent',
-            textposition='outside',
-            textfont=dict(size=11)
-        )])
-
-        fig_donut.update_layout(
-            height=300,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor='rgba(0,0,0,0)',
-            showlegend=False
-        )
-
-        st.plotly_chart(fig_donut, use_container_width=True)
+        st.plotly_chart(fig_vendas_mes, use_container_width=True)
 
 
 
-#------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+#Previsão de venda baseado em estatística
 with tab02:
+    st.subheader('Local onde a mágica acontece')
     with st.container(border=True):
         col_tab01, col_tab02 = st.columns(2)
         with col_tab01:
@@ -249,3 +236,8 @@ with tab02:
 
     with st.container(border=True):
         pass
+
+
+# Página de S&OP
+with tab03:
+    st.subheader('Local onde a mágica é confrontada')
