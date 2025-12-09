@@ -7,16 +7,15 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime
 
-#CHAMADA DE FUNÇÃO AUXLIAR
+#CHAMADA DE FUNÇÃO AUXILIAR
 from utils.config_vendas import Carregar_vendas
 from utils.Config_geral import formatar_brl
 
 #CONFIGURAÇÃO DA PAGINA
 st.set_page_config('Indicadores de Vendas', layout="wide", initial_sidebar_state="collapsed")
 
-#FUNÇÕES
 
-#VARIAVEIS GOBLAIS
+#VARIAVEIS GLOBAIS
 df_vendas = Carregar_vendas()
 
 #-------------------------------------------------------------------------------
@@ -221,14 +220,14 @@ with tab01:
 with tab02:
     st.subheader('Local onde a mágica acontece')
     with st.container(border=True):
-        col_tab01, col_tab02 = st.columns(2)
+        col_tab01, col_tab02, col_tab03 = st.columns([1,1,1])
         with col_tab01:
-            mes_previsao = st.number_input('Mes de previsão')
-            ano_previsao = st.number_input('Ano de previsão')
+            mes_previsao = st.number_input('Quantidade de Meses para previsão', min_value=1, max_value=12)
+
 
         with col_tab02:
             periodo_meses = st.number_input('Periodo Meses')
-            periodo_anos = st.number_input('Periodo Anos')
+
 
         st.button('Gerar')
 
